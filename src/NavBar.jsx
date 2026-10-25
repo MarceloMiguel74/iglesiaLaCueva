@@ -12,7 +12,7 @@ export function Navbar() {
       {/* Logo y Título Animado */}
       <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
         <img src="/logo.png" alt="Logo La Cueva de Adulam" style={{ width: '50px', height: '50px', borderRadius: '50%' }} />
-        <h1 style={{ margin: 0, fontSize: '1.5rem', fontWeight: 'bold', display: 'flex' }}>
+        <div style={{ margin: 0, fontSize: '1.5rem', fontWeight: 'bold', display: 'flex' }}>
           {texto.split("").map((letra, index) => (
             <span 
               key={index} 
@@ -25,7 +25,7 @@ export function Navbar() {
               {letra}
             </span>
           ))}
-        </h1>
+        </div>
       </div>
 
       {/* Botón Hamburguesa */}

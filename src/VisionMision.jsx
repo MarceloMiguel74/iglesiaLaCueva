@@ -56,9 +56,12 @@ export function VisionMision() {
       {/* Contenido ajustado al 70% del ancho de la pantalla */}
       <div style={{ width: '70%', minWidth: '320px', margin: '0 auto', position: 'relative', zIndex: 2 }}>
         
-        <h2 style={{ color: '#fff', textAlign: 'center', fontSize: '2.5rem', fontWeight: 'bold', marginBottom: '35px', textShadow: '0 3px 10px rgba(0,0,0,0.9)' }}>
-          ✨ Nuestra Identidad
-        </h2>
+        <h1 style={{ color: '#fff', textAlign: 'center', fontSize: '2.5rem', fontWeight: 'bold', marginBottom: '16px', textShadow: '0 3px 10px rgba(0,0,0,0.9)' }}>
+          Iglesia La Cueva de Adulam
+        </h1>
+        <p style={{ maxWidth: '850px', margin: '0 auto 35px', color: '#fff', textAlign: 'center', fontSize: '1.15rem', lineHeight: '1.7', textShadow: '0 2px 8px rgba(0,0,0,0.9)' }}>
+          Somos una iglesia en crecimiento con base virtual en González Catán. Llevamos la Palabra de Dios a los hogares por medio de la restauración, el refugio, la formación y el envío.
+        </p>
         
         <div style={{ display: 'flex', gap: '25px', flexWrap: 'wrap', justifyContent: 'center', alignItems: 'stretch' }}>
           

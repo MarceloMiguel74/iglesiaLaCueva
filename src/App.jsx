@@ -33,6 +33,71 @@ function ScrollToTop() {
   return null; // Este componente es invisible, no muestra nada
 }
 
+const seoPorRuta = {
+  '/': {
+    title: 'Iglesia La Cueva de Adulam | González Catán',
+    description: 'Una iglesia en crecimiento con base virtual en González Catán. Conocé nuestra misión, discipulado bíblico, mensajes y comunidad.',
+  },
+  '/identidad': {
+    title: 'Nuestra identidad, misión y valores | La Cueva de Adulam',
+    description: 'Conocé la misión, visión y valores de Iglesia La Cueva de Adulam, una comunidad cristiana de refugio, restauración y formación.',
+  },
+  '/mensajes': {
+    title: 'Mensajes y enseñanzas bíblicas | La Cueva de Adulam',
+    description: 'Leé mensajes y reflexiones bíblicas para crecer en la fe junto a Iglesia La Cueva de Adulam.',
+  },
+  '/comunidad': {
+    title: 'Comunidad, oración y testimonios | La Cueva de Adulam',
+    description: 'Compartí un pedido de oración o un testimonio y conectate con la comunidad de Iglesia La Cueva de Adulam.',
+  },
+  '/multimedia': {
+    title: 'Videos y mensajes | La Cueva de Adulam',
+    description: 'Mirá videos, prédicas y mensajes de Iglesia La Cueva de Adulam para acompañar tu crecimiento espiritual.',
+  },
+  '/cartelera': {
+    title: 'Actividades y eventos | La Cueva de Adulam',
+    description: 'Consultá las actividades y eventos de Iglesia La Cueva de Adulam y encontrá espacios para compartir y crecer.',
+  },
+  '/contacto': {
+    title: 'Contacto y discipulado bíblico | La Cueva de Adulam',
+    description: 'Contactá a Iglesia La Cueva de Adulam, consultá por el discipulado bíblico online y presencial o escribinos por WhatsApp.',
+  },
+  '/login': {
+    title: 'Acceso de administración | La Cueva de Adulam',
+    description: 'Acceso al panel de administración de Iglesia La Cueva de Adulam.',
+    noindex: true,
+  },
+  '/admin': {
+    title: 'Administración | La Cueva de Adulam',
+    description: 'Panel privado de administración de Iglesia La Cueva de Adulam.',
+    noindex: true,
+  },
+};
+
+function SEODeRuta() {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    const seo = seoPorRuta[pathname] || {
+      title: 'Página no encontrada | La Cueva de Adulam',
+      description: 'No encontramos la página que buscás en el sitio de Iglesia La Cueva de Adulam.',
+      noindex: true,
+    };
+    const url = `https://micuevadeadulam.org${pathname === '/' ? '/' : pathname}`;
+    const robots = seo.noindex ? 'noindex, nofollow' : 'index, follow';
+
+    document.title = seo.title;
+    document.querySelector('meta[name="description"]')?.setAttribute('content', seo.description);
+    document.querySelector('meta[name="robots"]')?.setAttribute('content', robots);
+    document.querySelector('link[rel="canonical"]')?.setAttribute('href', url);
+    document.querySelector('meta[property="og:title"]')?.setAttribute('content', seo.title);
+    document.querySelector('meta[property="og:description"]')?.setAttribute('content', seo.description);
+    document.querySelector('meta[property="og:url"]')?.setAttribute('content', url);
+  }, [pathname]);
+
+  return null;
+}
+
 // -------------------------------------------------------------
 // COMPONENTE: Último Mensaje (Para la Home)
 // -------------------------------------------------------------
@@ -191,8 +256,9 @@ function SeccionDiscipuladoHome() {
             <span className="etiqueta-discipulado">Discipulado · La Cueva de Adulam</span>
             <h2 id="titulo-discipulado">Sigamos creciendo juntos en la Palabra</h2>
             <p>
-              Crea tu cuenta para guardar tu avance y continuar tus lecciones
-              desde otros dispositivos.
+              Tenemos discipulado bíblico online y presencial para buscar la
+              reconciliación con el Padre y crecer en la Palabra. Crea tu cuenta
+              para guardar tu avance y continuar tus lecciones desde otros dispositivos.
             </p>
           </div>
           <div className="detalles-discipulado" aria-label="Sobre el discipulado">
@@ -337,6 +403,7 @@ export default function App() {
     <BrowserRouter>
       {/* 🟢 AQUI AGREGAMOS EL COMPONENTE INVISIBLE */}
       <ScrollToTop />
+      <SEODeRuta />
       
       {/* El Navbar con su magia elegante */}
       <Navbar />
