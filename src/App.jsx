@@ -211,7 +211,7 @@ function SeccionDiscipuladoHome() {
           </div>
           <a
             className="boton-discipulado"
-            href="https://www.discipulado.micuevadeadulam.org"
+            href="https://discipulado.micuevadeadulam.org"
           >
             Ir al discipulado <span aria-hidden="true">↗</span>
           </a>
