@@ -211,7 +211,7 @@ function SeccionDiscipuladoHome() {
           </div>
           <a
             className="boton-discipulado"
-            href="https://discipulado-cueva-adulam.netlify.app/"
+            href="https://www.discipulado.micuavadeadulam.org"
           >
             Ir al discipulado <span aria-hidden="true">↗</span>
           </a>
