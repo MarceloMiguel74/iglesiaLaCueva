@@ -25,6 +25,30 @@ html, body {
   overflow-x: hidden;
 }
 
+@media (max-width: 768px) {
+  .vision-mision-contenido {
+    width: calc(100% - 32px) !important;
+    min-width: 0 !important;
+  }
+
+  .iglesia-titulo-principal {
+    font-size: clamp(1.65rem, 8vw, 2rem) !important;
+    line-height: 1.15 !important;
+    overflow-wrap: anywhere;
+  }
+
+  .navbar-titulo {
+    font-size: 1.05rem !important;
+    max-width: 190px;
+    line-height: 1.05;
+    flex-wrap: wrap;
+  }
+
+  .navbar-titulo span {
+    width: auto !important;
+  }
+}
+
 /* Si usas Vite o Create React App, a veces el contenedor raíz limita el ancho */
 #root {
   width: 100%;

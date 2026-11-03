@@ -2,6 +2,12 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from './supabase';
 
+const formatearFechaAdmin = (fecha) => {
+  if (!fecha) return '';
+  const [anio, mes, dia] = String(fecha).slice(0, 10).split('-');
+  return dia && mes && anio ? `${dia}-${mes}-${anio}` : fecha;
+};
+
 export function Admin({ setVideoActual }) {
   const navigate = useNavigate();
   const [pestañaActiva, setPestañaActiva] = useState('videos'); 
@@ -31,6 +37,17 @@ export function Admin({ setVideoActual }) {
   const [msgDescripcion, setMsgDescripcion] = useState("");
   const [msgVersiculo, setMsgVersiculo] = useState("");
   const [msgFecha, setMsgFecha] = useState("");
+
+  // --- ESTADOS REFLEXIONES ---
+  const [listaReflexiones, setListaReflexiones] = useState([]);
+  const [editingReflexionId, setEditingReflexionId] = useState(null);
+  const [refTitulo, setRefTitulo] = useState("");
+  const [refDescripcion, setRefDescripcion] = useState("");
+  const [refVersiculo, setRefVersiculo] = useState("");
+  const [refFecha, setRefFecha] = useState("");
+  const [refImagenUrl, setRefImagenUrl] = useState("");
+  const [refImagenFile, setRefImagenFile] = useState(null);
+  const [refActiva, setRefActiva] = useState(true);
 
   // --- ESTADOS BANDEJA DE ENTRADA ---
   const [mensajesContacto, setMensajesContacto] = useState([]);
@@ -62,6 +79,10 @@ export function Admin({ setVideoActual }) {
     // Mensajes 
     const { data: mData } = await supabase.from('mensajes').select('*').order('id', { ascending: false });
     if (mData) setListaMensajes(mData);
+
+    // Reflexiones bíblicas
+    const { data: rData } = await supabase.from('reflexiones').select('*').order('fecha', { ascending: false });
+    if (rData) setListaReflexiones(rData);
 
     // Bandeja de Entrada de Contacto
     const { data: ctoData } = await supabase.from('mensajes_contacto').select('*').order('fecha', { ascending: false });
@@ -202,6 +223,51 @@ const cerrarSesion = async () => {
     }
   };
 
+  // --- FUNCIONES REFLEXIONES ---
+  const limpiarFormReflexion = () => {
+    setEditingReflexionId(null); setRefTitulo(""); setRefDescripcion("");
+    setRefVersiculo(""); setRefFecha(""); setRefImagenUrl(""); setRefImagenFile(null); setRefActiva(true);
+  };
+
+  const cargarReflexionParaEditar = (r) => {
+    setEditingReflexionId(r.id); setRefTitulo(r.titulo || ""); setRefDescripcion(r.descripcion || "");
+    setRefVersiculo(r.versiculo || ""); setRefFecha(r.fecha || ""); setRefImagenUrl(r.imagen_url || ""); setRefActiva(r.activa !== false);
+  };
+
+  const guardarReflexion = async (e) => {
+    e.preventDefault();
+    let imagenUrl = refImagenUrl;
+
+    if (refImagenFile) {
+      const extension = refImagenFile.name.split('.').pop()?.toLowerCase() || 'jpg';
+      const ruta = `reflexiones/${Date.now()}-${Math.random().toString(36).slice(2)}.${extension}`;
+      const { error: uploadError } = await supabase.storage.from('reflexiones').upload(ruta, refImagenFile, { cacheControl: '3600', upsert: false });
+      if (uploadError) { alert(`Error al subir la imagen: ${uploadError.message}`); return; }
+      const { data } = supabase.storage.from('reflexiones').getPublicUrl(ruta);
+      imagenUrl = data.publicUrl;
+    }
+
+    if (!imagenUrl) { alert('Seleccioná una imagen para la reflexión.'); return; }
+
+    const valores = { titulo: refTitulo, descripcion: refDescripcion, versiculo: refVersiculo, fecha: refFecha, imagen_url: imagenUrl, activa: refActiva };
+    const { error } = editingReflexionId
+      ? await supabase.from('reflexiones').update(valores).eq('id', editingReflexionId)
+      : await supabase.from('reflexiones').insert([{ ...valores, me_gusta: 0 }]);
+
+    if (error) alert(`Error al guardar la reflexión: ${error.message}`);
+    else { alert(editingReflexionId ? 'Reflexión actualizada.' : 'Reflexión publicada.'); limpiarFormReflexion(); fetchDatos(); }
+  };
+
+  const eliminarReflexion = async (id, imagenUrl) => {
+    if (!window.confirm('¿Seguro que deseas eliminar esta reflexión?')) return;
+    await supabase.from('reflexiones').delete().eq('id', id);
+    if (imagenUrl?.includes('/storage/v1/object/public/reflexiones/')) {
+      const ruta = imagenUrl.split('/storage/v1/object/public/reflexiones/')[1];
+      await supabase.storage.from('reflexiones').remove([ruta]);
+    }
+    fetchDatos();
+  };
+
   // --- FUNCIONES BANDEJA DE ENTRADA ---
   const eliminarMensajeContacto = async (id) => {
     if (window.confirm("¿Seguro que deseas borrar este mensaje de tu bandeja?")) {
@@ -252,6 +318,7 @@ const cerrarSesion = async () => {
         <button onClick={() => setPestañaActiva('comunidad')} style={pestañaActiva === 'comunidad' ? tabActiva : tabInactiva}>🙏 Comunidad</button>
         <button onClick={() => setPestañaActiva('cartelera')} style={pestañaActiva === 'cartelera' ? tabActiva : tabInactiva}>📅 Cartelera</button>
         <button onClick={() => setPestañaActiva('mensajes')} style={pestañaActiva === 'mensajes' ? tabActiva : tabInactiva}>📖 Mensajes</button>
+        <button onClick={() => setPestañaActiva('reflexiones')} style={pestañaActiva === 'reflexiones' ? tabActiva : tabInactiva}>🖼️ Reflexiones</button>
         <button onClick={() => setPestañaActiva('bandeja')} style={pestañaActiva === 'bandeja' ? tabActiva : tabInactiva}>
           📥 Bandeja {mensajesContacto.length > 0 && `(${mensajesContacto.length})`}
         </button>
@@ -438,6 +505,49 @@ const cerrarSesion = async () => {
                   </div>
                 ))
               )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ----------------- PESTAÑA: REFLEXIONES ----------------- */}
+      {pestañaActiva === 'reflexiones' && (
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '20px' }}>
+          <div style={panelStyle}>
+            <h3 style={tituloPanel}>{editingReflexionId ? '✏️ Editar Reflexión' : '➕ Nueva Reflexión'}</h3>
+            <form onSubmit={guardarReflexion} style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+              <input type="text" placeholder="Título" value={refTitulo} onChange={(e) => setRefTitulo(e.target.value)} required style={inputStyle} />
+              <textarea placeholder="Texto breve sobre la reflexión" value={refDescripcion} onChange={(e) => setRefDescripcion(e.target.value)} style={{ ...inputStyle, minHeight: '90px' }} />
+              <input type="text" placeholder="Versículo bíblico" value={refVersiculo} onChange={(e) => setRefVersiculo(e.target.value)} style={inputStyle} />
+              <input type="date" value={refFecha} onChange={(e) => setRefFecha(e.target.value)} required style={inputStyle} />
+              <input type="file" accept="image/jpeg,image/png,image/webp" onChange={(e) => setRefImagenFile(e.target.files?.[0] || null)} style={inputStyle} />
+              <label style={{ color: '#475569', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <input type="checkbox" checked={refActiva} onChange={(e) => setRefActiva(e.target.checked)} /> Publicar en inicio
+              </label>
+              <div style={{ display: 'flex', gap: '10px' }}>
+                <button type="submit" style={btnPrimary}>{editingReflexionId ? 'Actualizar' : 'Publicar'}</button>
+                {editingReflexionId && <button type="button" onClick={limpiarFormReflexion} style={btnSecondary}>Cancelar</button>}
+              </div>
+            </form>
+          </div>
+          <div style={panelStyle}>
+            <h3 style={tituloPanel}>Reflexiones ({listaReflexiones.length})</h3>
+            <div style={{ maxHeight: '500px', overflowY: 'auto' }}>
+              {listaReflexiones.map((r) => (
+                <div key={r.id} style={itemStyle}>
+                  <div style={{ display: 'flex', gap: '10px', alignItems: 'center', width: '100%' }}>
+                    <img src={r.imagen_url} alt="" style={{ width: '70px', height: '50px', objectFit: 'cover', borderRadius: '6px' }} />
+                    <div style={{ flex: 1 }}>
+                      <strong>{r.titulo}</strong>
+                      <div style={{ color: '#64748b', fontSize: '0.8rem' }}>📅 {formatearFechaAdmin(r.fecha)} · ❤️ {r.me_gusta || 0}</div>
+                    </div>
+                  </div>
+                  <div style={{ marginTop: '8px', display: 'flex', gap: '5px' }}>
+                    <button onClick={() => cargarReflexionParaEditar(r)} style={btnSmallGray}>✏️ Editar</button>
+                    <button onClick={() => eliminarReflexion(r.id, r.imagen_url)} style={btnSmallRed}>🗑️ Eliminar</button>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         </div>

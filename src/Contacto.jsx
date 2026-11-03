@@ -58,16 +58,7 @@ export function Contacto() {
       </div>
 
       <style>{`
-        .contenedor-contactos { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; max-width: 800px; margin: 0 auto; }
-        @media (max-width: 768px) { .contenedor-contactos { grid-template-columns: 1fr; } .formulario-contacto { padding: 20px !important; } }
-        .enlace-wa { text-decoration: none; display: block; height: 100%; }
-        .tarjeta-contacto { background-color: #f8fafc; padding: 20px; border-radius: 8px; border: 1px solid #e2e8f0; text-align: center; box-shadow: 0 2px 4px rgba(0,0,0,0.05); transition: all 0.3s ease; cursor: pointer; height: 100%; display: flex; flex-direction: column; justify-content: center; }
-        .enlace-wa:hover .tarjeta-contacto { transform: translateY(-5px); box-shadow: 0 8px 15px rgba(37, 211, 102, 0.2); border-color: #25d366; }
-        .numero-wa { font-size: 1.5rem; color: var(--color-primario, #1e3a8a); margin: 10px 0 5px 0; font-weight: bold; transition: color 0.3s ease; }
-        .enlace-wa:hover .numero-wa { color: #25d366; }
-        .nombre-contacto { font-size: 1.1rem; color: #64748b; margin: 0; }
-        .icono-wa { font-size: 2.5rem; margin-bottom: 10px; transition: transform 0.3s ease; }
-        .enlace-wa:hover .icono-wa { transform: scale(1.1); }
+        @media (max-width: 768px) { .formulario-contacto { padding: 20px !important; } }
         .input-form { width: 100%; padding: 12px; margin-bottom: 15px; border-radius: 6px; border: 1px solid #cbd5e1; box-sizing: border-box; font-size: 1rem; font-family: inherit; }
         .input-form:focus { outline: none; border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); }
         .btn-enviar { background-color: #f59e0b; color: #0f172a; border: none; padding: 14px 25px; border-radius: 6px; font-weight: bold; font-size: 1.1rem; cursor: pointer; width: 100%; transition: background 0.3s, transform 0.1s; }
@@ -79,28 +70,6 @@ export function Contacto() {
         📍 Contáctanos
       </h2>
       
-      <div style={{ backgroundColor: '#fff', padding: '30px 20px', borderRadius: '8px', border: '1px solid #e2e8f0', marginTop: '30px' }}>
-        <h3 style={{ textAlign: 'center', color: '#64748b', marginTop: 0, marginBottom: '25px', fontSize: '1.2rem' }}>Atención Inmediata (WhatsApp)</h3>
-        <div className="contenedor-contactos">
-          <a href="https://wa.me/5491130093939?text=Hola,%20quisiera%20hacer%20una%20consulta" target="_blank" rel="noopener noreferrer" className="enlace-wa">
-            <div className="tarjeta-contacto">
-              <div className="icono-wa">📱</div>
-              <h3 className="numero-wa">11-3009-3939</h3>
-              <p className="nombre-contacto">(Marcelo)</p>
-              <p style={{ color: '#25d366', fontSize: '0.85rem', marginTop: '10px', fontWeight: 'bold' }}>Toque para escribir</p>
-            </div>
-          </a>
-          <a href="https://wa.me/5491127008920?text=Hola,%20quisiera%20hacer%20una%20consulta" target="_blank" rel="noopener noreferrer" className="enlace-wa">
-            <div className="tarjeta-contacto">
-              <div className="icono-wa">📱</div>
-              <h3 className="numero-wa">11-2700-8920</h3>
-              <p className="nombre-contacto">(Lorena)</p>
-              <p style={{ color: '#25d366', fontSize: '0.85rem', marginTop: '10px', fontWeight: 'bold' }}>Toque para escribir</p>
-            </div>
-          </a>
-        </div>
-      </div>
-
       {/* FORMULARIO CONECTADO A SUPABASE */}
       <div className="formulario-contacto" style={{ backgroundColor: '#f8fafc', padding: '40px', borderRadius: '8px', border: '1px solid #e2e8f0', marginTop: '30px', maxWidth: '600px', margin: '30px auto' }}>
         <h3 style={{ textAlign: 'center', color: '#1e3a8a', marginTop: 0, marginBottom: '10px', fontSize: '1.5rem' }}>Déjanos un Mensaje</h3>

@@ -16,6 +16,8 @@ import { Contacto } from './Contacto';
 import { Footer } from './Footer';
 import { Admin } from './Admin';
 import { Login } from './Login';
+import { ReflexionesHome } from './ReflexionesHome';
+import { ReflexionesPage } from './ReflexionesPage';
 
 import './App.css';
 
@@ -36,7 +38,7 @@ function ScrollToTop() {
 const seoPorRuta = {
   '/': {
     title: 'Iglesia La Cueva de Adulam | González Catán',
-    description: 'Una iglesia en crecimiento con base virtual en González Catán. Conocé nuestra misión, discipulado bíblico, mensajes y comunidad.',
+    description: 'Somos una iglesia en crecimiento en González Catán. Conocé nuestra misión, discipulado bíblico, mensajes y comunidad.'
   },
   '/identidad': {
     title: 'Nuestra identidad, misión y valores | La Cueva de Adulam',
@@ -49,6 +51,10 @@ const seoPorRuta = {
   '/comunidad': {
     title: 'Comunidad, oración y testimonios | La Cueva de Adulam',
     description: 'Compartí un pedido de oración o un testimonio y conectate con la comunidad de Iglesia La Cueva de Adulam.',
+  },
+  '/reflexiones': {
+    title: 'Reflexiones bíblicas | La Cueva de Adulam',
+    description: 'Leé reflexiones bíblicas, versículos y palabras de motivación de Iglesia La Cueva de Adulam.',
   },
   '/multimedia': {
     title: 'Videos y mensajes | La Cueva de Adulam',
@@ -318,6 +324,7 @@ function Inicio({ videoActual }) {
 
       <VisionMision />
       <SeccionDiscipuladoHome />
+      <ReflexionesHome />
       <Cartelera />
       <VideoInvitacion videoActual={videoActual} />
       
@@ -414,6 +421,7 @@ export default function App() {
           <Route path="/" element={<Inicio videoActual={videoActual} />} />
           <Route path="/identidad" element={<IdentidadPage />} />
           <Route path="/mensajes" element={<SeccionMensajes />} />
+          <Route path="/reflexiones" element={<ReflexionesPage />} />
           <Route path="/comunidad" element={<SeccionComunidad />} />
           <Route path="/multimedia" element={<PaginaMultimedia />} />
           <Route path="/cartelera" element={<Cartelera />} />

@@ -12,7 +12,7 @@ export function Navbar() {
       {/* Logo y Título Animado */}
       <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
         <img src="/logo.png" alt="Logo La Cueva de Adulam" style={{ width: '50px', height: '50px', borderRadius: '50%' }} />
-        <div style={{ margin: 0, fontSize: '1.5rem', fontWeight: 'bold', display: 'flex' }}>
+        <div className="navbar-titulo" style={{ margin: 0, fontSize: '1.5rem', fontWeight: 'bold', display: 'flex' }}>
           {texto.split("").map((letra, index) => (
             <span 
               key={index} 
@@ -41,6 +41,7 @@ export function Navbar() {
         <Link to="/" className="nav-link" onClick={() => setMenuAbierto(false)}>Inicio</Link>
         <Link to="/identidad" className="nav-link" onClick={() => setMenuAbierto(false)}>Ntra Identidad</Link>
         <Link to="/mensajes" className="nav-link" onClick={() => setMenuAbierto(false)}>Mensajes</Link>
+        <Link to="/reflexiones" className="nav-link" onClick={() => setMenuAbierto(false)}>Reflexiones</Link>
         <Link to="/cartelera" className="nav-link" onClick={() => setMenuAbierto(false)}>Cartelera</Link>
         <Link to="/multimedia" className="nav-link" onClick={() => setMenuAbierto(false)}>Multimedia</Link>
         <Link to="/comunidad" className="nav-link" onClick={() => setMenuAbierto(false)}>Pedido Oración y Testimonios</Link>
